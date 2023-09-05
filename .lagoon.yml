@@ -1,0 +1,2 @@
+docker-compose-yaml: docker-compose.yml
+project: workshop-orange-n8n

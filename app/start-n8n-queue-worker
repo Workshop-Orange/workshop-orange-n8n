@@ -1,0 +1,13 @@
+#!/bin/sh
+
+. /app/n8n-lagoon-vars
+
+export EXECUTIONS_MODE="queue"
+export QUEUE_BULL_REDIS_HOST="redis"
+export N8N_SKIP_WEBHOOK_DEREGISTRATION_SHUTDOWN="true"
+
+if [ ! -d "/app/storage/.n8n/" ]; then
+    mkdir -p "/app/storage/.n8n"
+fi;
+
+n8n worker --concurrency=5

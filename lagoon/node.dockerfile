@@ -1,7 +1,7 @@
 FROM uselagoon/node-18
 
 # The N8N version to use
-ARG N8N_VERSION=1.61.0
+ARG N8N_VERSION=1.70.4
 
 WORKDIR /app
 
@@ -20,7 +20,7 @@ RUN set -eux; \
 
 COPY lagoon/n8n-entrypoint.sh /lagoon/entrypoints/71-n8n-entrypoint
 
-
+ENV N8N_VERSION=${N8N_VERSION}
 ENV N8N_PORT 3000
 ENV N8N_PROTOCOL http
 ENV N8N_USER_FOLDER /app/storage

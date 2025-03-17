@@ -1,0 +1,87 @@
+version: '2.3'
+
+x-lagoon-project:
+  &lagoon-project workshop-orange-n8n
+
+x-environment:
+  &default-environment
+    LAGOON_PROJECT: *lagoon-project
+    LAGOON_ROUTE: http://workshop-orange-n8n.docker.amazee.io
+
+services:
+        
+  # SERVICE: Node container
+  node:
+    env_file:
+      - .lagoon.env
+    networks:
+      - amazeeio-network
+      - default
+    build:
+      context: .
+      dockerfile: lagoon/node.dockerfile
+    image: &node-image workshop-orange-n8n-node # this image will be reused as `NODE_IMAGE` in subsequent Docker builds
+    environment:
+      << : *default-environment # loads the defined environment variables from the top
+    labels:
+      # Lagoon Labels
+      lagoon.type: node-persistent
+      lagoon.persistent: /app/storage/ # location where the persistent storage should be mounted
+    volumes:
+      - ./app/storage:/app/storage:delegated
+    depends_on:
+      - postgres
+      - redis
+    restart: always
+
+  worker:
+    env_file:
+      - .lagoon.env
+    networks:
+      - amazeeio-network
+      - default
+    build:
+      context: .
+      dockerfile: lagoon/worker.dockerfile
+      args:
+        NODE_IMAGE: *node-image # Inject the name of the node image
+    environment:
+      << : *default-environment # loads the defined environment variables from the top
+    labels:
+      # Lagoon Labels
+      lagoon.type: cli-persistent
+      lagoon.persistent: /app/storage/ # location where the persistent storage should be mounted
+      lagoon.persistent.name: node # mount the persistent storage of nginx into this container
+    volumes:
+      - ./app/storage:/app/storage:delegated
+    depends_on:
+      - redis
+      - postgres
+      - node
+    restart: always
+
+  # SERVICE: PostgreSQL
+  postgres:
+    image: uselagoon/postgres-13:latest
+    env_file:
+      - .lagoon.env
+    labels:
+      # tells Lagoon this is a Postgres database
+      lagoon.type: postgres
+    ports:
+      # exposes the port 5432 with a random local port
+      # find it with `docker-compose port postgres 5432`
+      - "5432"
+
+  # SERVICE: redis container
+  redis:
+    networks:
+      - amazeeio-network
+      - default
+    image: amazeeio/redis
+    labels:
+      lagoon.type: redis
+
+networks:
+  amazeeio-network:
+    external: true

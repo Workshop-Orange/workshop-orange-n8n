@@ -1,0 +1,17 @@
+#!/bin/sh
+
+. /app/n8n-lagoon-vars
+
+export EXECUTIONS_MODE="queue"
+export QUEUE_BULL_REDIS_HOST="redis"
+export N8N_SKIP_WEBHOOK_DEREGISTRATION_SHUTDOWN="true"
+
+if [ ! -d "/app/storage/.n8n/" ]; then
+    mkdir -p "/app/storage/.n8n"
+fi;
+
+if [ -z "$N8N_ENCRYPTION_KEY" ]; then
+	export N8N_ENCRYPTION_KEY=`cat /app/storage/.n8n/config | grep encryptionKey | awk -F \" '{print $4}'`
+fi;
+
+n8n worker --concurrency=5

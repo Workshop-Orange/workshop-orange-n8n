@@ -1,0 +1,37 @@
+#!/bin/sh
+
+if [ -z $N8N_EDITOR_BASE_URL ]; then
+    echo "Settng N8N_EDITOR_BASE_URL to $LAGOON_ROUTE"
+    export N8N_EDITOR_BASE_URL=$LAGOON_ROUTE
+fi
+
+if [ -z $POSTGRES_DATABASE ]; then
+    export POSTGRES_DATABASE="lagoon"
+fi
+
+if [ -z $POSTGRES_HOST ]; then
+    export POSTGRES_HOST="postgres"
+fi
+
+if [ -z $POSTGRES_PORT ]; then
+    export POSTGRES_PORT="5432"
+fi
+
+if [ -z $POSTGRES_USERNAME ]; then
+    export POSTGRES_USERNAME="lagoon"
+fi
+
+if [ -z $POSTGRES_PASSWORD ]; then
+    export POSTGRES_PASSWORD="lagoon"
+fi
+
+export DB_POSTGRESDB_DATABASE=$POSTGRES_DATABASE
+export DB_POSTGRESDB_HOST=$POSTGRES_HOST
+export DB_POSTGRESDB_PORT=$POSTGRES_PORT
+export DB_POSTGRESDB_USER=$POSTGRES_USERNAME
+export DB_POSTGRESDB_PASSWORD=$POSTGRES_PASSWORD
+export N8N_SKIP_WEBHOOK_DEREGISTRATION_SHUTDOWN="true"
+
+export GENERIC_TIMEZONE="America/New_York"
+export N8N_LOG_LEVEL=debug
+export EXECUTIONS_DATA_PRUNE=true

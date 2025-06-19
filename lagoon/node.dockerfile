@@ -1,7 +1,7 @@
 FROM uselagoon/node-18
 
 # The N8N version to use
-ARG N8N_VERSION=1.91.3
+ARG N8N_VERSION=1.98.2
 
 WORKDIR /app
 

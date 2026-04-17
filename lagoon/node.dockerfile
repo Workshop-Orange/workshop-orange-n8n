@@ -1,4 +1,4 @@
-FROM uselagoon/node-20
+FROM uselagoon/node-22
 
 # The N8N version to use
 ARG N8N_VERSION=2.16.1

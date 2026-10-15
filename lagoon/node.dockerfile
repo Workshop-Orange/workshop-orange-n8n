@@ -1,7 +1,7 @@
 FROM uselagoon/node-22
 
 # The N8N version to use
-ARG N8N_VERSION=2.26.7
+ARG N8N_VERSION=2.43.6
 
 WORKDIR /app
 

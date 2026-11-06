@@ -78,7 +78,7 @@ services:
     networks:
       - amazeeio-network
       - default
-    image: amazeeio/redis
+    image: uselagoon/redis-7
     labels:
       lagoon.type: redis
 
